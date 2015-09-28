@@ -1,0 +1,84 @@
+/*中心メニュー*/
+.menu-button {
+  background: #000;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  bottom: 0;
+  box-shadow: 0 0 24px rgba(58, 58, 58, 0.6);
+  display: block;
+  height: 76px;
+  width: 76px;
+  top: 250px;/*座標*/
+  left: 250px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 100%;
+  white-space: nowrap;
+  z-index: 9999;
+  background-image: linear-gradient(#db3a2b, #cf0404);
+}
+.menu-button span {
+  background: url(../image/menu.png) no-repeat center center;
+  height: 64px;
+  width: 64px;
+  display: block;
+  transition: 0.3s ease;
+}
+ 
+.active .menu-button span {
+  transform: rotate(-135deg);
+}
+
+
+/*各メニュー*/
+.menu-option li {
+  display: block;
+  position: absolute;
+  top: 250px;/*座標*/
+  left: 250px;
+  transition: 0.3s;
+}
+.menu-option li a {
+  background-color: #333;
+  background-size: #900;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  display: block;
+  height: 60px;
+  width : 60px;
+  padding: 6px;
+  position: relative;
+  transition-duration: 0.2s;
+}
+
+a.icon1{background: url(../image/menu1.png) no-repeat center center; background-size: 100px 100px;}
+a.icon2{background: url(../image/menu2.png) no-repeat center center; background-size: 100px 100px;}
+a.icon3{background: url(../image/menu3.png) no-repeat center center; background-size: 100px 100px;}
+a.icon4{background: url(../image/menu4.png) no-repeat center center; background-size: 100px 100px;}
+a.icon5{background: url(../image/menu1.png) no-repeat center center; background-size: 100px 100px;}
+a.icon6{background: url(../image/menu2.png) no-repeat center center; background-size: 100px 100px;}
+a.icon7{background: url(../image/menu3.png) no-repeat center center; background-size: 100px 100px;}
+a.icon8{background: url(../image/menu4.png) no-repeat center center; background-size: 100px 100px;}
+
+.menu-option li a span {
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  transition: 0.4s ease;
+}
+.menu-option li a:hover {
+  box-shadow: 0 0 18px #5bdaec, 0 0 12px #4b78cb, inset 0 0 4px #f8f8f3;
+}
+
+
+
+.active .menu-option li a {
+  animation: expand 0.7s ease 0s backwards;
+}
+ 
+@keyframes expand {
+  0%   { top: 0; }
+  50%  { top: -10px; }
+  70%  { top: 10px; }
+  100% { top: 0; }
+}

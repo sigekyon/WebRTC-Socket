@@ -1,0 +1,20 @@
+{
+  "name": "360立体画像ビュー",
+  "description": "360度の画像ビューワーをFireFoxOSで",
+  "launch_path": "/index.html",
+  "version": "1",
+  "icons": {
+    "128": "/image/icon_128.png",
+    "256": "/image/icon_256.png"
+  },
+  "permissions": {
+    "camera": {
+      "description": "カメラを利用します"
+    }
+  },
+  "developer": {
+    "name": "きょん",
+    "url": "#"
+  },
+  "default_locale": "ja"
+}

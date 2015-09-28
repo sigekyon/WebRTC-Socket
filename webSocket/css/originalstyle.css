@@ -1,0 +1,226 @@
+@CHARSET "UTF-8";
+
+*{margin: 0;padding: 0}
+
+html {
+	font-family : verdana, sans-serif;
+	font-size : 100%;
+	line-height : 1.5;
+}
+
+/* @group Heading */
+h1,h2,h3,h4,h5,h6 { margin-bottom : 12px}
+h1 {
+font-size: 48px; 
+line-height: 1} /* 48px */
+h2 {
+font-size : 36px;
+line-height : 1.3333} /* 48px */
+h3{
+font-size : 24px;
+line-height : 1} /* 24px */
+h4,h5,h6 {
+font-size : 16px;
+line-height : 1.5} /* 24px */
+/* @end */
+
+body { 
+	padding-top: 60px;
+}
+
+/* @group Header */
+
+/* @end */
+
+#contents{
+	max-width : 90%;
+	text-align : center;
+	margin : 0 auto;
+}
+
+#contents a{
+	margin-bottom : 12px;
+}
+
+.spNone{
+	max-width : 100%;
+	margin-bottom : 12px;
+	text-align : left
+}
+
+.container{
+	max-width : 100%;
+	text-align : left
+}
+
+#chat-area {
+	margin-bottom: 8px;
+}
+
+.meta {
+		color: #999999;
+	font-size: 0.9em;
+}
+.chat-time {
+	margin-left: 12px;
+}
+
+video {
+    border:5px solid black;
+    width:140px;
+    height:120px;
+    position: relative;
+    border-radius: 50% / 10%; color: white; text-align: center; text-indent: .1em;
+    margin-bottom : 12px;
+    vertical-align : middle;
+
+}
+
+canvas {
+    border:5px solid black;
+    width:120px;
+    height:120px;
+    position: relative;
+    border-radius: 50% / 10%; color: white; text-align: center; text-indent: .1em;
+    margin-bottom : 12px;
+    vertical-align : middle;
+}
+
+#color { 
+	margin-bottom : 12px;
+	vertical-align : bottom
+}
+/*
+button {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	color: #FFFFFF;
+	padding: 10px 20px;
+	border-radius: 50px;
+	box-shadow: inset 0px 0px 13px transparent;
+	background-image: -moz-linear-gradient(top, #0000ff, #007aff);
+	background-image: -ms-linear-gradient(top, #0000ff, #007aff);
+	background-image: -webkit-linear-gradient(top, #0000ff, #007aff);
+	background-image: linear-gradient(top, #0000ff, #007aff);
+	background-clip: padding-box;
+	opacity: 0.54;
+}
+*/
+
+/**
+ * ボタンエフェクト * 
+ */
+
+button {
+  display: inline-block;
+  text-align: center;
+  border-width: 1px;
+  border-style: solid;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1.1;
+  font-weight: normal;
+  font-family: sans-serif;
+  color: #FFFFFF;
+  font-size: 12px;
+  background-color: #006BCF;
+  background-image: -webkit-linear-gradient(top, #006ed4 0%, #197fdf 48%, #006BCF 49%, #006BCF 82%, #0079eb 100%);
+  background-image: -moz-linear-gradient(top, #006ed4 0%, #197fdf 48%, #006BCF 49%, #006BCF 82%, #0079eb 100%);
+  background-image: -o-linear-gradient(top, #006ed4 0%, #197fdf 48%, #006BCF 49%, #006BCF 82%, #0079eb 100%);
+  background-image: linear-gradient(top, #006ed4 0%, #197fdf 48%, #006BCF 49%, #006BCF 82%, #0079eb 100%);
+  border-color: hsl(209, 40%, 41%);
+  -webkit-box-shadow: inset 0 0 1px 1px #1c92ff, 0 0 1px 3px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: inset 0 0 1px 1px #1c92ff, 0 0 1px 3px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 1px 1px #1c92ff, 0 0 1px 3px rgba(0, 0, 0, 0.15);
+  -webkit-text-shadow: 1px 1px 1px #003669;
+  -moz-text-shadow: 1px 1px 1px #003669;
+  -o-text-shadow: 1px 1px 1px #003669;
+  text-shadow: 1px 1px 1px #003669;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+  padding: 12px 30px 12px 30px;
+}
+
+.grayscale {
+	-webkit-filter: grayscale(1);
+}
+.sepia {
+	-webkit-filter: sepia(1);
+}
+.invert {
+	-webkit-filter: invert(1);
+}
+.blur {
+	-webkit-filter: blur(3px);
+}
+.superbox-list {
+    display:inline-block;
+    *display:inline;
+    zoom:1;
+    width:12.5%;
+}
+
+.box{
+
+/*
+border: 0px solid #000000;
+
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+
+background: #fff;
+background: -moz-radial-gradient(center, ellipse cover, #fff 52%, #d6c9fd 62%, #d6c9fd 100.5%);
+background: -webkit-gradient(radial, center center, color-stop(52%, #fff), color-stop(62%, #d6c9fd), color-stop(100.5%, #d6c9fd));
+background: -webkit-radial-gradient(center, ellipse cover, #fff 52%, #d6c9fd 62%, #d6c9fd 100.5%);
+background: radial-gradient(center, ellipse cover, #fff 52%, #d6c9fd 62%, #d6c9fd 100.5%);
+
+-webkit-box-shadow: 2px 2px 20px 5px #000;
+-moz-box-shadow: 2px 2px 20px 5px #000;
+box-shadow: 2px 2px 20px 5px #000;
+
+-moz-opacity: 0.50;
+-khtml-opacity: 0.50;
+opacity: 0.50;
+*/
+
+/* Border */
+border: 13px solid #4754ff;
+
+/* Gradient */
+background: #fff;
+background: -moz-radial-gradient(center, ellipse cover, #fff 0%, #ffffff 100%);
+background: -webkit-gradient(radial, center center, color-stop(0%, #fff), color-stop(100%, #ffffff));
+background: -webkit-radial-gradient(center, ellipse cover, #fff 0%, #ffffff 100%);
+background: radial-gradient(center, ellipse cover, #fff 0%, #ffffff 100%);
+
+/* Box-Shadow */
+-webkit-box-shadow:inset 5px 5px 5px 5px #0014a8,inset 5px 5px 5px 5px #000;
+-moz-box-shadow:inset 5px 5px 5px 5px #0014a8,inset 5px 5px 5px 5px #000;
+box-shadow:inset 5px 5px 5px 5px #0014a8,inset 5px 5px 5px 5px #000;
+
+/* Opacity */
+-moz-opacity: 0.50;
+-khtml-opacity: 0.50;
+opacity: 0.50;
+
+padding: 10px 10px 0px 10px;
+}
+
+
+@media screen and(max-width : 479px){
+	.spNone{ display : none;}
+}
+
+@media screen and(min-width : 480px){
+	.myModalNone{ display : none;}
+}
+
+#cvsdraw {
+    border:5px solid black;
+    width:100%;
+    height:auto;
+    cursor:url(../images/beam.png),pointer;
+}
+

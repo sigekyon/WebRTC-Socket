@@ -1,0 +1,152 @@
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<title>HTML5-WebSocket</title>
+	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<!-- originalstyle.css -->
+	<link rel="stylesheet" type="text/css" href="css/originalstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css" >
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" >
+	
+</head>
+  
+<body>
+	<header>
+		<nav>	
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</a>
+						<a class="brand" href="./top.html">HTML5
+                                                <div id="webSocketCount"></div>
+                                                </a>
+						<div class="nav-collapse">
+							<ul class="nav">
+								<li><a href="./chat4.html">メッセージング</a></li>
+								<li><a href="./whiteBord.html">ホワイトボード</a></li>
+								<li><a href="./game.html">ゲーム</a></li>
+								<li><a href="./map.html">MAP</a></li>
+								<li><a href="./videochat.html">ライブ配信</a></li>
+                                                                <li><a href="./gallary.html">ギャラリー</a></li>
+                                                                <li><a href="./360camera.html">360度カメラ</a></li>
+                                                                <li><a href="./sengraph.html">データ可視化</a></li>
+                                                                <li><a href="./3dAnimation.html">3D</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+    </header>
+
+
+	<h5>あなたの位置</h5>
+	<div id="show_result"></div>
+	<div id="map1" style="border: 1px solid; width:240px; height:240px;"></div>
+        <h5>相手の位置</h5>
+	<div id="show_result2"></div>
+        <div id="mapClient" style="border: 1px solid; width:240px; height:240px;"></div>
+	<input class="span10" type="text" id="textbox" style="visibility:hidden" >
+    
+	<script src="./js/jquery-latest.js"></script>
+	<script src="./js/bootstrap.js"></script>
+	<script src="./js/chat_client.js"></script>
+	<script src="./js/adapter.js"></script>
+
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+
+	<script>
+	//ユーザーの現在の位置情報を取得
+	navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+	/***** ユーザーの現在の位置情報を取得 *****/
+	function successCallback(position) {
+		var gl_text = "緯度：" + position.coords.latitude + "<br>";
+		gl_text += "経度：" + position.coords.longitude + "<br>";
+		document.getElementById("show_result").innerHTML = gl_text;
+		
+		//GoogleMapでの地図表示
+		this.showMap(position);
+	}
+        
+
+	/***** 位置情報が取得できない場合 *****/
+	function errorCallback(error) {
+		var err_msg = "";
+		switch(error.code)
+		{
+			case 1:
+			err_msg = "位置情報の利用が許可されていません";
+			break;
+		case 2:
+			err_msg = "デバイスの位置が判定できません";
+			break;
+		case 3:
+			err_msg = "タイムアウトしました";
+			break;
+		}
+		document.getElementById("show_result").innerHTML = err_msg;
+	}
+
+    //GoogleMap表示
+    function showMap(position) {
+	    var lat = position.coords.latitude;
+	    var long = position.coords.longitude;
+
+	    // 取得して現在位置をGoogle Maps APIに渡す
+	    var mapCenter = new google.maps.LatLng(lat, long);
+	    var mapDiv = document.getElementById("map1");
+	    var options = {
+	        zoom:16,            // 表示倍率を指定
+	        center:mapCenter,    // 中央位置を指定
+	        mapTypeId:google.maps.MapTypeId.ROADMAP,
+	        scaleControl:true    // 倍率変更を指定
+	    };
+	    // 地図を表示
+	    var map = new google.maps.Map(mapDiv, options);
+
+	    // マーカーを表示
+	    var marker = new google.maps.Marker({
+	        position:mapCenter,
+	        map:map,
+	        title:"現在地"});
+	        map.setCenter(mapCenter);
+
+	    /*GoogleMapの画像化(canvas描画)
+            var url = http://maps.google.com/staticmap?..........
+            canvas = document.getElementById("cvsMap");
+            var img = new Image();
+            img.src = url;
+            img.width = canvas.width;
+            img.height = canvas.height;
+            
+            canvas.getContext("2d").drawImage(img, 0, 0);
+            */
+
+            /*GoogleMapが動作した場合*/
+            google.maps.event.addListener(map, 'dragend',function(){
+               ws.send(JSON.stringify({
+	       type: 'map',
+	       latitude: position.coords.latitude,
+	       longitude: position.coords.longitude
+	       }));
+            });
+
+            ws.send(JSON.stringify({
+	    type: 'map',
+	    latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+	    }));
+    }
+    
+</script>
+
+
+</body>
+
+</html>

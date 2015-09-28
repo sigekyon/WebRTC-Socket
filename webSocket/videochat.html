@@ -1,0 +1,123 @@
+<html lang="ja">
+  
+  <head>
+    <meta charset="utf-8">
+    <title>HTML5-WebSocket</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/originalstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" >
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" >
+
+</head>
+  
+<body>
+	<header>
+		<nav>	
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</a>
+						<a class="brand" href="./top.html">HTML5
+                                                <div id="webSocketCount"></div>
+                                                </a>
+						<div class="nav-collapse">
+							<ul class="nav">
+								<li><a href="./chat4.html">メッセージング</a></li>
+								<li><a href="./whiteBord.html">ホワイトボード</a></li>
+								<li><a href="./game.html">ゲーム</a></li>
+								<li><a href="./map.html">MAP</a></li>
+								<li><a href="./videochat.html">ライブ配信</a></li>
+                                                                <li><a href="./gallary.html">ギャラリー</a></li>
+                                                                <li><a href="./360camera.html">360度カメラ</a></li>
+                                                                <li><a href="./sengraph.html">データ可視化</a></li>
+                                                                <li><a href="./3dAnimation.html">3D</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+    </header>
+    <h5>
+    撮影チェック
+    </h6>
+    <section class="box">
+    <video id="vidoChat1" autoplay="true"></video>
+    <canvas id="vidoChat2" ></canvas>
+    <br>
+    </section>
+    <h5>
+    ライブ映像
+    </h6>
+    <section class="box">
+    <canvas id="vidoChat3" ></canvas>
+    </section>
+    <br>
+    <button id="btn1" onclick="start()">カメラ起動</button>
+    <button id="btn2" onclick="sendStream()">ライブ配信</button>
+    <button id="btn3" onclick="stopStream()">ライブ停止</button>
+
+
+
+    <input type="text" id="textbox" style="visibility:hidden">
+    <script src="./js/jquery-latest.js"></script>
+    <script src="./js/bootstrap.js"></script>
+    <script src="./js/chat_client.js"></script>
+
+<script>
+   var vidoChat1 = document.getElementById("vidoChat1");
+   var canvas = document.getElementById('vidoChat2');
+
+   filters = ["", "sepia", "invert", "blur", "grayscale"];
+   findex = 0;
+   var timerID;
+
+   btn2.disabled = true;
+   btn3.disabled = true;
+
+   
+   function start() {
+	 navigator.webkitGetUserMedia({video:true}, gotStream, function() {});
+   }
+   function gotStream(stream) {
+	 vidoChat1.src = webkitURL.createObjectURL(stream);
+         btn2.disabled = false;
+
+   }
+   //ビデオを画像変換処理
+   function snap() {
+       canvas.className = '';
+       if (findex != 0)
+          canvas.classList.add(filters[findex]);
+          canvas.getContext("2d").drawImage(vidoChat1, 0, 0, canvas.width, canvas.height);
+       btn3.disabled = false;
+   }
+   //ライブ配信
+   function sendStream(){
+         timerID = setInterval(function(){
+
+         this.snap();
+         // DataURLを取得し、イベントを発行する
+         var videoData = canvas.toDataURL('image/jpeg');
+         ws.send(JSON.stringify({
+	   type: 'video',
+	   video: videoData
+	 }));
+       },30);
+    }
+
+    //ライブ停止
+    function stopStream(){
+        btn3.disabled = true;
+        clearInterval(timerID);
+    }
+
+</script>
+
+</body>
+
+</html>

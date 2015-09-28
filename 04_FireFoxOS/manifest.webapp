@@ -1,0 +1,21 @@
+{
+  "name": "サンプル1",
+  "description": "はじめてのFirefox OSアプリ",
+  "launch_path": "/index.html",
+  "icons": {
+    "256": "/image/icon_256.png"
+  },
+  "permissions": {
+    "geolocation": {
+      "description": "GPSを利用します"
+    },
+    "camera": {
+      "description": "カメラを利用します"
+    }
+  },
+  "developer": {
+    "name": "sige",
+    "url": "#"
+  },
+  "default_locale": "ja"
+}

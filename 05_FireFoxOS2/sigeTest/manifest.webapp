@@ -1,0 +1,22 @@
+{
+  "name": "sige007",
+  "description": "sige007",
+  "launch_path": "/index.html",
+  "icons": {
+    "128": "/image/icon_256.png",
+    "256": "/image/icon_256.png"
+  },
+  "permissions": {
+    "geolocation": {
+      "description": "GPSを利用します"
+    },
+    "camera": {
+      "description": "カメラを利用します"
+    }
+  },
+  "developer": {
+    "name": "sige007",
+    "url": "#"
+  },
+  "default_locale": "ja"
+}

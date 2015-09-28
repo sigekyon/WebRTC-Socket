@@ -1,0 +1,232 @@
+<html lang="ja">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+<title>HTML5</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" >
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" >
+<script type="text/JavaScript">
+	var flag=false;
+	var mobileFlag=false;
+	var fps=30;
+	var maxNum=500;
+	var maxCnt=30;
+	var touchFlag=false;
+	var tempX=0;
+	var tempY=0;
+	var veloZ=1;
+	var width;
+	var height;
+	var canvas;
+	var context;
+	var struct = new Array(maxNum);
+	function object(){
+	this.x=0;
+	this.y=0;
+	this.z=0;
+	this.cnt=0;
+	this.tempX=0;
+	this.tempY=0;
+	this.cnt=0;
+	this.red=Math.floor(Math.random()*256);
+	this.green=Math.floor(Math.random()*256);
+	this.blue=Math.floor(Math.random()*256);
+	}
+	function load(){
+	canvas=document.getElementById('sel');
+	if(navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0
+	|| navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0)mobileFlag=true;
+	if(mobileFlag){
+	canvas.addEventListener("touchmove", mouseMoveHandler, false);
+	canvas.addEventListener("touchstart", mouseDownHandler, false);
+	canvas.addEventListener("touchend", mouseUpHandler, false);
+	}
+	else{
+	canvas.addEventListener("mousemove", mouseMoveHandler, false);
+	canvas.addEventListener("mousedown", mouseDownHandler, false);
+	canvas.addEventListener("mouseup", mouseUpHandler, false);
+	}
+	expandCanvas();
+	context=canvas.getContext('2d');
+	context.fillStyle='rgba(255,255,255,0.7)';
+	context.font = "bold 70px 'Arial'";
+	context.lineWidth=3;
+	context.lineCap='round';
+	initial();
+	orpning();
+	}
+	function expandCanvas(){
+	var b = document.body;
+	var d = document.documentElement;
+	canvas.width = Math.max(b.clientWidth , b.scrollWidth, d.scrollWidth, d.clientWidth);
+	canvas.height = Math.max(b.clientHeight , b.scrollHeight, d.scrollHeight, d.clientHeight);
+	width=canvas.width;
+	height=canvas.height;
+	}
+	function initial(){
+	for(var n=0;n<maxNum;n++){
+	struct[n]=new object();
+	struct[n].x=Math.floor(Math.random()*width);
+	struct[n].y=Math.floor(Math.random()*height);
+	struct[n].z=Math.floor(Math.random()*50);
+	}
+	tempX=width/2;
+	tempY=height/2;
+	}
+	var time=0;
+	function orpning(){
+	time+=5;
+	if(time > 360)time=0;
+	touchFlag=true;
+	tempX=width/2+200*Math.sin(time*Math.PI/180);
+	tempY=height/2;
+	for(var n=0;n<maxNum;n++){
+	accel(n);
+	}
+	draw();
+	var string="HTML5";
+	var size=context.measureText(string);
+	context.fillText(string,(width-size.width)/2,height/2+20);
+	context.restore();
+	if(!flag)setTimeout("orpning()",1000/fps);
+	}
+	function gameBody(){
+	for(var n=0;n<maxNum;n++){
+	accel(n);
+	}
+	draw();
+	setTimeout("gameBody()",1000/fps);
+	}
+	function draw(){
+	if(canvas.getContext){
+	context.save();
+	context.clearRect(0,0,width,height);
+	//draw obj
+	for(var n=0;n<maxNum;n++){
+	var alp=(1/maxCnt*struct[n].cnt);
+	if(!touchFlag){
+	context.beginPath();
+	context.fillStyle='rgba('+struct[n].red+','+struct[n].green+','+struct[n].blue+','+alp+')';
+	context.arc(struct[n].x,struct[n].y,struct[n].cnt/6,0,Math.PI*2,false);
+	context.fill();
+	}
+	else{
+	alp=alp*2;
+	if(struct[n].cnt == 0)continue;
+	context.beginPath();
+	context.moveTo(struct[n].tempX,struct[n].tempY);
+	context.lineTo(struct[n].x,struct[n].y);
+	context.strokeStyle='rgba('+struct[n].red+','+struct[n].green+','+struct[n].blue+','+alp+')';
+	context.stroke();
+	}
+	}
+	context.restore();
+	}
+	}
+	var adj=25;
+	function accel(n){
+	if(struct[n].cnt < maxCnt)struct[n].cnt++;
+	if(touchFlag){
+	adj=5;
+	struct[n].tempX=struct[n].x;
+	struct[n].tempY=struct[n].y;
+	}
+	else{
+	adj=25;
+	}
+	var vX=Math.sqrt(Math.pow(struct[n].z,2)+Math.pow(struct[n].x-tempX,2)-Math.pow(veloZ,2));
+	var vY=Math.sqrt(Math.pow(struct[n].z,2)+Math.pow(struct[n].y-tempY,2)-Math.pow(veloZ,2));
+	struct[n].z-=veloZ;
+	if(struct[n].x > tempX){
+	struct[n].x+=vX/adj;
+	}
+	else{
+	struct[n].x-=vX/adj;
+	}
+	if(struct[n].y > tempY){
+	struct[n].y+=vY/adj;
+	}
+	else{
+	struct[n].y-=vY/adj;
+	}
+	if(struct[n].z == 0 ||struct[n].x < 0 || struct[n].x > width || struct[n].y < 0 || struct[n].y > height){
+	struct[n].x=Math.random()*width;
+	struct[n].y=Math.random()*height;
+	struct[n].z=50;
+	struct[n].cnt=0;
+	}
+	}
+	function mouseDownHandler(e) {
+	if(!flag){
+	flag=true;
+	setTimeout("gameBody()",1000/fps);
+	}
+	touchFlag=true;
+	var rect = e.target.getBoundingClientRect();
+	if(mobileFlag){
+	tempX=e.touches[0].pageX-rect.left;
+	tempY=e.touches[0].pageY-rect.top;
+	}
+	else{
+	tempX=e.clientX-rect.left;
+	tempY=e.clientY-rect.top;
+	}
+	}
+	function mouseUpHandler(e){
+	touchFlag=false;
+	}
+	function mouseMoveHandler(e){
+	if(!touchFlag)return;
+	var rect = e.target.getBoundingClientRect();
+	if(mobileFlag){
+	tempX=e.touches[0].pageX-rect.left;
+	tempY=e.touches[0].pageY-rect.top;
+	}
+	else{
+	tempX=e.clientX-rect.left;
+	tempY=e.clientY-rect.top;
+	}
+}
+</script>
+
+
+</head>
+<body ontouchmove="event.preventDefault()" onload="load()">
+	<header>
+		<nav>	
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</a>
+						<a class="brand" href="./top.html">HTML5
+                                                <div id="webSocketCount"></div>
+                                                </a>
+
+						<div class="nav-collapse">
+							<ul class="nav">
+								<li><a href="./chat4.html">メッセージング</a></li>
+								<li><a href="./whiteBord.html">ホワイトボード</a></li>
+								<li><a href="./game.html">ゲーム</a></li>
+								<li><a href="./map.html">MAP</a></li>
+								<li><a href="./videochat.html">ライブ配信</a></li>
+                                                                <li><a href="./gallary.html">ギャラリー</a></li>
+                                                                <li><a href="./360camera.html">360度カメラ</a></li>
+                                                                <li><a href="./sengraph.html">データ可視化</a></li>
+                                                                <li><a href="./3dAnimation.html">3D</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+    </header>
+<div id="contents">
+<canvas id="sel" style="background-color:black;" ></canvas>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script src="./js/jquery-2.1.0.js"></script>
+    <script src="./js/owl.carousel.js"></script>
+    <script src="./js/bootstrap.js"></script>
+    <script src="./js/jquery.circlemenu.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+    <!-- Owl Carousel -->
+    <link href="./style/bootstrap.css" rel="stylesheet">
+    <link href="./style/bootstrap-theme.css" rel="stylesheet">
+    <link href="./style/owl.carousel.css" rel="stylesheet">
+    <link href="./style/owl.theme.css" rel="stylesheet">
+    <link href="./style/cerclemenu.css" rel="stylesheet">
+
+
+  </head>
+  <body onload="SetPos();">
+
+    <script>
+    $(document).ready(function() {
+      $("#owl-demo").owlCarousel({
+
+      navigation : false,
+      slideSpeed : 300,
+      paginationSpeed : 400,
+      singleItem : true
+
+      });
+    });
+
+    //RSSリーダー
+
+    //URL
+    var newsURL = "http://rss.dailynews.yahoo.co.jp/fc/domestic/rss.xml";
+    google.load("feeds", "1");
+    function initialize() {
+      var feed = new google.feeds.Feed(newsURL);
+
+      feed.setNumEntries(10);
+
+      feed.load(function(result) {
+        if (!result.error) {
+          var container = document.getElementById("feed");
+          for (var i = 0; i < result.feed.entries.length; i++) {
+            var entry = result.feed.entries[i];
+            var div = document.createElement("div");
+
+            //背景色設定
+            if(i%2) {
+              div.setAttribute("class","bg-success");
+            }
+            else {
+              div.setAttribute("class","bg-warning");
+            }
+
+            var aTag = document.createElement("a");
+            aTag.setAttribute("href"," entry.link");
+            aTag.appendChild(document.createTextNode("もっと見る"));
+
+            div.appendChild(document.createTextNode(entry.title));
+            div.appendChild(aTag);
+            container.appendChild(div);
+          }
+        }
+      });
+    }
+    google.setOnLoadCallback(initialize);
+
+
+    //サークル型メニュー
+
+    //メニューの座標
+    var defaultx;
+    var defaulty;
+    
+    function circlemenuInit() {
+        if (isNaN($('#startAngle').val())) {
+            return false;
+        }
+        var opts = {
+            startAngle: $('#startAngle').val() * 1,
+            angleDifference: $('#angleDifference').val() * 1,
+            radius: $('#radius').val() * 1,
+            delay: $('#delay').val() * 1
+        };
+        $('.circlemenu-container').circlemenu(opts)
+            .find('.menu-option')
+                .find('a').click(function(event) {
+                    event.preventDefault();
+
+                });
+    }
+
+    function reset() {
+        if ($('#circlemenuContainer').hasClass('active')) {
+            $('.menu-button').trigger('click');
+        }
+        circlemenuInit();
+    }
+
+    //サークルメニューボタンを押下時の制御
+    $(function() {
+        $('.btn').click(function(e) {
+            e.preventDefault();
+            reset();
+        });
+        //ボタン押下時の制御
+        $('#icon1').click(function(e) {
+            //Yahooニュース
+            newsURL = "http://rss.dailynews.yahoo.co.jp/fc/domestic/rss.xml";
+            $("#feed").empty();
+            $("#feedTitle").empty();
+            $("#feedTitle").text("Yahooニュース");
+            initialize();
+        });
+        $('#icon2').click(function(e) {
+            //Googleニュース
+            newsURL = "http://news.google.com/news?hl=ja&ned=us&ie=UTF-8&oe=UTF-8&output=rss";
+            $("#feed").empty();
+            $("#feedTitle").empty();
+            $("#feedTitle").text("Googleニュース");
+            initialize();
+        });
+        $('#icon3').click(function(e) {
+            //MSN産経ニュース
+            newsURL = "http://sankei.jp.msn.com/rss/news/points.xml";
+            $("#feed").empty();
+            $("#feedTitle").empty();
+            $("#feedTitle").text("MSN産経ニュース");
+            initialize();
+        });
+        $('#icon4').click(function(e) {
+            //日経BPニュース
+            newsURL = "http://feed.nikkeibp.co.jp/rss/nikkeibp/recommend.rdf";
+            $("#feed").empty();
+            $("#feedTitle").empty();
+            $("#feedTitle").text("日経BPニュース");
+            initialize();
+        });
+
+        circlemenuInit();
+
+    });
+    
+    
+    //画面起動時にメニューの座標をセット
+    function SetPos(){
+    
+        defaultx = document.getElementById("zahyoux").value;
+        defaulty = document.getElementById("zahyouy").value;
+        //トグル
+        document.getElementById("menu-button").style.left = defaultx+"px";
+        document.getElementById("menu-button").style.top  = defaulty+"px";
+        //メニュー
+        elmlength = document.getElementById("menu-option").childNodes.length;
+        for(i = 1; i < elmlength; i+=2){
+        document.getElementById("menu-option").childNodes[i].style.left = defaultx+"px";
+        document.getElementById("menu-option").childNodes[i].style.top  = defaulty+"px";
+        }
+    }
+
+
+    </script>
+
+    <style>
+    #owl-demo .item img{
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+    </style>
+
+    
+    <!-- カルーセルメニュー開始 -->
+    <div id="demo">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <div id="owl-demo" class="owl-carousel">
+              <div class="item"><img src="image/top_image01.jpg" alt="イメージ1"></div>
+              <div class="item"><img src="image/top_image02.jpg" alt="イメージ2"></div>
+              <div class="item"><img src="image/top_image03.jpg" alt="イメージ3"></div>
+              <div class="item"><img src="image/top_image04.jpg" alt="イメージ4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- カルーセルメニュー終了 -->
+
+    <!-- RSS開始 -->
+    <div id="feedTitle">Yahooニュース</div>
+    <div id="feed"></div>
+    <!-- RSS終了 -->
+
+    <!-- サークルメニュー開始 -->
+    <div id="circlemenuContainer" class="circlemenu-container right">
+        <a href="#" class="menu-button" id="menu-button" title="Toggle"><span></span></a>
+        <ul class="menu-option" id="menu-option">
+            <li><a href="#" title="item1" class="icon1" id="icon1" style="background:"><span></span></a></li>
+            <li><a href="#" title="item2" class="icon2" id="icon2" style="background:"><span></span></a></li>
+            <li><a href="#" title="item3" class="icon3" id="icon3" style="background:"><span></span></a></li>
+            <li><a href="#" title="item4" class="icon4" id="icon4" style="background:"><span></span></a></li>
+        </ul>
+    </div>
+
+    <!-- メニューのパラメータ設定 -->
+    <input type="hidden" id="startAngle"      class="value deg" value="90" />
+    <input type="hidden" id="angleDifference" class="value deg" value="90" />
+    <input type="hidden" id="radius"          class="value deg" value="325" />
+    <input type="hidden" id="delay"           class="value deg" value="30" />
+    <input type="hidden" id="zahyoux"         class="value deg" value="0" />
+    <input type="hidden" id="zahyouy"         class="value deg" value="400" />
+    <!-- サークルメニュー終了 -->
+
+
+    <script>
+    </script>
+  </body>
+</html>

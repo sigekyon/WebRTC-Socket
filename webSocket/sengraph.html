@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+<style>
+
+body {
+  margin: auto;
+  position: relative;
+  width: 960px;
+}
+
+button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+
+</style>
+<link rel="stylesheet" type="text/css" href="css/originalstyle.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" >
+<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" >
+<body>
+	<header>
+		<nav>	
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</a>
+						<a class="brand" href="./top.html">HTML5
+                                                <div id="webSocketCount"></div>
+                                                </a>
+						<div class="nav-collapse">
+							<ul class="nav">
+								<li><a href="./chat4.html">メッセージング</a></li>
+								<li><a href="./whiteBord.html">ホワイトボード</a></li>
+								<li><a href="./game.html">ゲーム</a></li>
+								<li><a href="./map.html">MAP</a></li>
+								<li><a href="./videochat.html">ライブ配信</a></li>
+                                                                <li><a href="./gallary.html">ギャラリー</a></li>
+                                                                <li><a href="./360camera.html">360度カメラ</a></li>
+                                                                <li><a href="./sengraph.html">データ可視化</a></li>
+                                                                <li><a href="./3dAnimation.html">3D</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+    </header>
+<script src="./js/d3.v3.min.js"></script>
+<script src="./js/jquery-latest.js"></script>
+<script src="./js/bootstrap.js"></script>
+<script src="./js/three.js"></script>
+<script src="./js/TypeArrayVector3.js"></script>
+<script>
+
+var timerID = setInterval(function(){
+        //グラフ描画
+	transition();
+        //ベンチマーク
+        update();
+},3000);
+
+//ベンチマーク
+var Benchmark = function ( title, test ) {
+	var titleDom = document.createElement( 'div' );
+	titleDom.style.fontWeight = 'bold';
+	titleDom.textContent = title;
+	document.body.appendChild( titleDom );
+
+	var msDom = document.createElement( 'div' );
+	document.body.appendChild( msDom );
+
+	this.run = function () {
+
+		var start = performance.now();
+
+		test();
+
+		msDom.textContent = performance.now() - start;
+
+	}
+
+};
+
+
+var vector11 = new THREE.Vector3( 1.2, 2.3, 3.4 );
+var vector12 = new THREE.Vector3( 1.2, 2.3, 3.4 );
+
+
+var benchmarks = [
+
+	new Benchmark( 'セキュリティ：', function () {
+
+		for ( var i = 0; i < 10000; i ++ ) {
+
+			var vector = new THREE.Vector3( 1, 1, 1 );
+
+		}
+
+	} ),
+
+	new Benchmark( 'パフォーマンス：', function () {
+
+		for ( var i = 0; i < 10000; i ++ ) {
+
+			var vector = new THREE.TypeArrayVector3( 1, 1, 1 );
+
+		}
+
+	} ),
+	new Benchmark( 'データ量：', function () {
+
+		for ( var i = 0; i < 10000000; i ++ ) {
+
+			vector11.add( vector12 );
+
+		}
+
+	} )
+
+];
+
+
+function update () {
+
+	vector11 = new THREE.Vector3( Math.random(), Math.random(), Math.random() );
+	vector12 = new THREE.Vector3( Math.random(), Math.random(), Math.random() );
+
+	vector21 = new THREE.TypeArrayVector3().set( vector11.x, vector11.y, vector11.z );
+	vector22 = new THREE.TypeArrayVector3().set( vector12.x, vector12.y, vector12.z );
+
+	for ( var i = 0, l = benchmarks.length; i < l; i ++ ) {
+
+		benchmarks[ i ].run();
+
+	}
+}
+
+//グラフ描画
+
+var n = 20, // number of layers
+    m = 200, // number of samples per layer
+    stack = d3.layout.stack().offset("wiggle"),
+    layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); })),
+    layers1 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
+
+var width = 960,
+    height = 500;
+
+var x = d3.scale.linear()
+    .domain([0, m - 1])
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .domain([0, d3.max(layers0.concat(layers1), function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); })])
+    .range([height, 0]);
+
+var color = d3.scale.linear()
+    .range(["#aad", "#556"]);
+
+var area = d3.svg.area()
+    .x(function(d) { return x(d.x); })
+    .y0(function(d) { return y(d.y0); })
+    .y1(function(d) { return y(d.y0 + d.y); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.selectAll("path")
+    .data(layers0)
+  .enter().append("path")
+    .attr("d", area)
+    .style("fill", function() { return color(Math.random()); });
+
+function transition() {
+  d3.selectAll("path")
+      .data(function() {
+        var d = layers1;
+        layers1 = layers0;
+        return layers0 = d;
+      })
+    .transition()
+      .duration(2500)
+      .attr("d", area);
+}
+
+// Inspired by Lee Byron's test data generator.
+function bumpLayer(n) {
+
+  function bump(a) {
+    var x = 1 / (.1 + Math.random()),
+        y = 2 * Math.random() - .5,
+        z = 10 / (.1 + Math.random());
+    for (var i = 0; i < n; i++) {
+      var w = (i / n - y) * z;
+      a[i] += x * Math.exp(-w * w);
+    }
+  }
+
+  var a = [], i;
+  for (i = 0; i < n; ++i) a[i] = 0;
+  for (i = 0; i < 5; ++i) bump(a);
+  return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
+}
+
+
+</script>

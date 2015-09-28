@@ -1,0 +1,134 @@
+<html lang="ja">
+  
+  <head>
+    <meta charset="utf-8">
+    <title>HTML5-WebSocket</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/originalstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" >
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" >
+</head>
+  
+<body>
+	<header>
+		<nav>	
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</a>
+						<a class="brand" href="./top.html">HTML5
+                                                <div id="webSocketCount"></div>
+                                                </a>
+						<div class="nav-collapse">
+							<ul class="nav">
+								<li><a href="./chat4.html">メッセージング</a></li>
+								<li><a href="./whiteBord.html">ホワイトボード</a></li>
+								<li><a href="./game.html">ゲーム</a></li>
+								<li><a href="./map.html">MAP</a></li>
+								<li><a href="./videochat.html">ライブ配信</a></li>
+                                                                <li><a href="./gallary.html">ギャラリー</a></li>
+                                                                <li><a href="./360camera.html">360度カメラ</a></li>
+                                                                <li><a href="./sengraph.html">データ可視化</a></li>
+                                                                <li><a href="./3dAnimation.html">3D</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+    </header>
+    
+    <div id="contents">
+	    <canvas id="cvsdraw" ></canvas>
+	    <input type="text" id="textbox" style="visibility:hidden">
+	    <br>
+	    <input class="span10" id="color" type="color" list="data1" value="#ff0000"/>
+	
+	    <datalist id="data1">
+	    <option value="#ff0000"></option>
+	    <option value="#00ff00"></option>
+	    <option value="#0000ff"></option>
+	    </datalist>
+	    <input class="span10" id="range01" type="range" min="1" max="10"/>
+    </div>
+    <!-- //contents -->
+
+    <script src="./js/jquery-latest.js"></script>
+    <script src="./js/bootstrap.js"></script>
+    <script src="./js/chat_client.js"></script>
+
+<script>
+
+	//絵描き処理
+	var canvasDraw = document.getElementById("cvsdraw");
+	var ctxDraw = canvasDraw.getContext('2d');
+	var isDraw = false;
+	var x, y;
+        var lineL = 2;//ライン調整(left)
+        var lineT = 1.1;//ライン調整(top)
+
+	canvasDraw.addEventListener('mousedown', function(e) {
+                var rect = e.target.getBoundingClientRect();
+                x = e.layerX - (rect.left)*lineL;
+		y = e.layerY - (rect.top)*lineT;
+
+		isDraw = true;
+                var drawImage = canvasDraw.toDataURL("image/png");
+                
+
+	        ws.send(JSON.stringify({
+		   type: 'draw',
+	           user: userName,
+		   image: drawImage
+		}));
+
+	}, 'false');
+
+	canvasDraw.addEventListener('mousemove', function(e) {
+		var rect = e.target.getBoundingClientRect();
+                //x = e.layerX - rect.left;
+		//y = e.layerY - rect.top;
+		x = e.layerX - (rect.left)*lineL;
+		y = e.layerY - (rect.top)*lineT;
+                
+                //色の指定（カラーピッカー）
+                var drawColor = document.getElementById("color");
+                ctxDraw.strokeStyle = drawColor.value;
+                //線の太さを指定（スライダー）
+                var drawWidth = document.getElementById("range01");
+                ctxDraw.lineWidth = drawWidth.value;
+
+		if (isDraw) {
+			ctxDraw.lineTo(x, y);	
+			ctxDraw.stroke();
+                        
+		}
+                var drawImage = canvasDraw.toDataURL("image/png");
+	        ws.send(JSON.stringify({
+		   type: 'draw',
+	           user: userName,
+		   image: drawImage
+		}));
+
+	}, 'false');
+
+        //ホワイトボード処理
+	canvasDraw.addEventListener('mouseup', function(e) {
+		var drawImage = canvasDraw.toDataURL("image/png");
+	        isDraw = false;
+	        ws.send(JSON.stringify({
+		   type: 'draw',
+	           user: userName,
+		   image: drawImage
+		}));
+	}, 'false');
+
+</script>
+
+</body>
+
+</html>

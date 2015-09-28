@@ -1,0 +1,320 @@
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<title>HTML5-WebSocket</title>
+	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+	<!-- originalstyle.css -->
+	<link rel="stylesheet" type="text/css" href="css/originalstyle.css"/>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css" >
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" >
+	
+	<!-- //originalstyle.css -->
+	<!-- KickStart framework -->
+<!-- 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="js/kickstart.js"></script>
+	<link rel="stylesheet" href="css/kickstart.css" media="all" />
+-->
+	<!-- //KickStart framework -->
+</head>
+  
+<body>
+	<header>
+		<!--
+			<div class="grid">
+				<ul class="menu">
+				<li class="current"><a href="">Item 1</a></li>
+				<li><a href="">Item 2</a></li>
+				<li><a href=""><i class="icon-inbox"></i> Item 3</a>
+					<ul>
+					<li><a href=""><i class="icon-cog"></i> Sub Item</a></li>
+					<li><a href=""><i class="icon-envelope-alt"></i> Sub Item</a>
+						<ul>
+						<li><a href=""><i class="icon-wrench"></i> Sub Item</a></li>
+						<li><a href=""><i class="icon-camera-retro"></i> Sub Item</a></li>
+						<li><a href=""><i class="icon-coffee"></i> Sub Item</a></li>
+						<li><a href=""><i class="icon-twitter"></i> Sub Item</a></li>
+						</ul>
+					</li>
+					<li class="divider"><a href=""><i class="icon-trash"></i> li.divider</a></li>
+					</ul>
+				</li>
+				<li><a href="">Item 4</a></li>
+				</ul>
+			</div>
+		-->
+		<nav>
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</a>
+						<a class="brand" href="./top.html">HTML5<div id="webSocketCount"></div></a>
+						<div class="nav-collapse">
+							<ul class="nav">
+								<li><a href="./chat4.html">メッセージング</a></li>
+								<li><a href="./whiteBord.html">ホワイトボード</a></li>
+								<li><a href="./game.html">ゲーム</a></li>
+								<li><a href="./map.html">MAP</a></li>
+								<li><a href="./videochat.html">ライブ配信</a></li>
+                                                                <li><a href="./gallary.html">ギャラリー</a></li>
+                                                                <li><a href="./360camera.html">360度カメラ</a></li>
+                                                                <li><a href="./sengraph.html">データ可視化</a></li>
+                                                                <li><a href="./3dAnimation.html">3D</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+    </header>
+    
+    <!-- contents -->
+
+<!--     
+    <p><a class="btn" data-toggle="modal" href="#myModal" >ここを押すとモーダルウィンドウが開きます。</a></p>
+<div class="modal" id="myModal">
+<div class="modal-header">
+<button class="close" data-dismiss="modal">×</button>
+<h3>こいつがモーダルウィンドウです。</h3>
+</div>
+<div class="modal-body">
+<p>ここに本文が入ります。</p>
+</div>
+<div class="modal-footer">
+<a href="#" class="btn">ウィンドウを閉じます。</a>
+<a href="#" class="btn btn-primary">変更を保存します。</a>
+</div>
+</div>
+-->
+
+    <div id="contents" >
+		<!-- Button to trigger modal -->
+<input type="button" value="test" onClick="test();">
+		<div class="myModalNone" id="myModalNone">
+			<a href="#myModal" role="button" class="btn" data-toggle="modal">カメラ撮影</a>
+		</div>
+		<!-- Modal -->
+		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		    <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		        <h4 id="myModalLabel">カメラ撮影モード</h4>
+		    </div>
+		    <div class="modal-body"">
+			    <video id="vidm" autoplay="true"></video>
+			    <canvas id="cvsm"></canvas>
+			    <input class="span10" id="color" type="color" list="data1" value="#ff0000"/>  
+			    <datalist id="data1">
+					<option value="#ff0000"></option> 
+					<option value="#00ff00"></option> 
+					<option value="#0000ff"></option> 
+				</datalist>
+			    <br>
+				<button id="btn1m" onclick="start()">開始</button>
+				<button id="btn2m" onclick="snap()">撮影</button>
+				<button id="btn3m" onclick="send()">画像配信</button>
+		    </div>
+		</div>
+
+		<div class="spNone">
+			<section class="box">
+			    <video id="vid" autoplay="true"></video>
+			    <canvas id="cvs"></canvas>
+			</section>
+                        <br>
+		        <input class="span11" id="color" type="color" list="data1" value="#ff0000"/>
+			<datalist id="data1">
+			<option value="#ff0000"></option>
+			<option value="#00ff00"></option>
+			<option value="#0000ff"></option>
+			</datalist>
+			<br>
+			<button id="btn1" onclick="start()">開始</button>
+			<button id="btn2" onclick="snap()">撮影</button>
+			<button id="btn3" onclick="send()">画像配信</button>
+		</div>
+		
+	<!--
+	    <p>あなたの現在位置</p>
+	    <div id="show_result"></div>
+	    <div id="map" style="border: 1px solid #0000FF; width:240px; height:240px;"></div>
+	-->
+		<div class="container">
+			<div id="chat-area">
+				<div class="input-prepend">
+					<span class="add-on" id="user-name"><i class="icon-user">&#9786;</i></span>
+					<input class="span10" type="text" id="textbox" placeholder="今なにしてる？">
+				</div>
+			</div>
+			<ul id="chat-history" class="unstyled row-fluid"></ul>
+		</div>
+    </div>
+    <!-- //contests -->
+    
+	<script src="./js/jquery-latest.js"></script>
+	<script src="./js/bootstrap.js"></script>
+	<script src="./js/chat_client.js"></script>
+	<script src="./js/adapter.js"></script>
+
+	<!--
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	-->
+
+	<script>
+	//ユーザーの現在の位置情報を取得
+	navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+	/***** ユーザーの現在の位置情報を取得 *****/
+	function successCallback(position) {
+		var gl_text = "緯度：" + position.coords.latitude + "<br>";
+		gl_text += "経度：" + position.coords.longitude + "<br>";
+		//gl_text += "高度：" + position.coords.altitude + "<br>";
+		//gl_text += "緯度・経度の誤差：" + position.coords.accuracy + "<br>";
+		//gl_text += "高度の誤差：" + position.coords.altitudeAccuracy + "<br>";
+		//gl_text += "方角：" + position.coords.heading + "<br>";
+		//gl_text += "速度：" + position.coords.speed + "<br>";
+		//document.getElementById("show_result").innerHTML = gl_text;
+		
+	}
+
+	/***** 位置情報が取得できない場合 *****/
+	function errorCallback(error) {
+		var err_msg = "";
+		switch(error.code)
+		{
+			case 1:
+			err_msg = "位置情報の利用が許可されていません";
+			break;
+		case 2:
+			err_msg = "デバイスの位置が判定できません";
+			break;
+		case 3:
+			err_msg = "タイムアウトしました";
+			break;
+		}
+		//document.getElementById("show_result").innerHTML = err_msg;
+	}
+
+</script>
+
+<script>
+	/***** カメラ(WebRTCの制御） *****/
+	filters = ["", "sepia", "invert", "blur", "grayscale"];
+	findex = 0;
+	video = document.getElementById("vid");
+	canvas = document.getElementById("cvs");
+	canvas.width = 120;
+	canvas.height = 120;  
+	btn2.disabled = true;
+	btn3.disabled = true;
+
+        //モーダルモード
+        videom = document.getElementById("vidm");
+	canvasm = document.getElementById("cvsm");
+        canvasm.width = 120;
+	canvasm.height = 120;  
+        btn2m.disabled = true;
+	btn3m.disabled = true;
+
+	function start() {
+	  navigator.webkitGetUserMedia({video:true}, gotStream, function() {});
+	  btn1.disabled = true;
+          btn1m.disabled = true;
+         
+	}
+	function gotStream(stream) {
+	  video.src = webkitURL.createObjectURL(stream);
+          videom.src = webkitURL.createObjectURL(stream);
+	  btn2.disabled = false;
+	  btn3.disabled = false;
+          btn2m.disabled = false;
+	  btn3m.disabled = false;
+	}
+
+	//ビデオを画像変換処理
+	function snap() {
+	  canvas.className = '';
+          canvasm.className = '';
+	  if (findex != 0)
+	    canvas.classList.add(filters[findex]);
+	    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            //canvasm.classList.add(filters[findex]);
+	    canvasm.getContext("2d").drawImage(videom, 0, 0, canvasm.width, canvasm.height);
+
+	}
+　　　　//画像送信
+        function send(){
+           canvas = document.getElementById("cvs");
+	   var ctx = canvas.toDataURL("image/jpeg");
+           
+           ws.send(JSON.stringify({
+	   type: 'image',
+           user: userName,
+	   image: ctx
+	    }));
+           
+        }
+        //ライブ動画配信
+        function sendSt(){
+           
+           ws.send(JSON.stringify({
+	   type: 'video',
+	   video: video.src
+	    }));
+           
+        }
+
+
+</script>
+<script>
+
+	//絵描き処理
+	var canvasDraw = document.getElementById("cvs");
+	var ctxDraw = canvasDraw.getContext('2d');
+	var isDraw = false;
+	var x, y;
+
+	canvasDraw.addEventListener('mousedown', function(e) {
+		ctxDraw.moveTo(x, y);
+		isDraw = true;
+	}, 'false');
+
+	canvasDraw.addEventListener('mousemove', function(e) {
+		x = e.layerX;
+		y = e.layerY;
+                
+                //色指定（カラーピッカー）
+                var drawColor = document.getElementById("color");
+                ctxDraw.strokeStyle = drawColor.value;
+
+		if (isDraw) {
+			ctxDraw.lineTo(x, y);	
+			ctxDraw.stroke();
+		}
+	}, 'false');
+        canvasDraw.addEventListener('mouseup', function(e) {
+		ctxDraw.moveTo(x, y);
+		isDraw = false;
+	}, 'false');
+
+
+	function test(){
+		if(navigator.userAgent.indexOf("Firefox") != -1)
+		{
+			//Firefox用のスクリプト
+			alert("Firefox");
+		}
+		else{
+			//Mozilla用のスクリプト
+			alert("Mozilla");
+		}
+	}
+</script>
+
+</body>
+
+</html>

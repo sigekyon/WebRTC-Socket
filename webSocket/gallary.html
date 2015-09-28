@@ -1,0 +1,244 @@
+<html lang="ja">
+  
+  <head>
+    <meta charset="utf-8">
+    <title>HTML5-WebSocket</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/originalstyle.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" >
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" >
+<link rel="stylesheet" href="css/cerclemenu.css" />
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/jquery.circlemenu.js"></script>
+
+<script>
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//メニューの座標
+	var defaultx;
+	var defaulty;
+	
+	function circlemenuInit() {
+		if (isNaN($('#startAngle').val())) {
+			return false;
+		}
+		var opts = {
+			startAngle: $('#startAngle').val() * 1,
+			angleDifference: $('#angleDifference').val() * 1,
+			radius: $('#radius').val() * 1,
+			delay: $('#delay').val() * 1
+		};
+		$('.circlemenu-container').circlemenu(opts)
+			.find('.menu-option')
+				.find('a').click(function(event) {
+					event.preventDefault();
+					//alert($(this).text());
+					//document.getElementById('bigImg').src = this.href;//hrefの画像パスをbigImg領域に割り当て
+				});
+	}
+
+	function reset() {
+		if ($('#circlemenuContainer').hasClass('active')) {
+			$('.menu-button').trigger('click');
+		}
+		circlemenuInit();
+	}
+
+
+	$(function() {
+		$('.btn').click(function(e) {
+			e.preventDefault();
+			reset();
+		});
+
+		circlemenuInit();
+
+	});
+	
+	
+	//画面起動時にメニューの座標をセット
+	function SetPos(){
+	
+		defaultx = document.getElementById("zahyoux").value;
+		defaulty = document.getElementById("zahyouy").value;
+		//トグル
+		document.getElementById("menu-button").style.left = defaultx+"px";
+		document.getElementById("menu-button").style.top  = defaulty+"px";
+		//メニュー
+		elmlength = document.getElementById("menu-option").childNodes.length;
+		for(i = 1; i < elmlength; i+=2){
+		document.getElementById("menu-option").childNodes[i].style.left = defaultx+"px";
+		document.getElementById("menu-option").childNodes[i].style.top  = defaulty+"px";
+		}
+	}
+	
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+</script>
+</head>
+  
+<body onload="SetPos();">
+
+<!-- *********************************************************************************************** -->
+
+	<div id="circlemenuContainer" class="circlemenu-container right">
+		<a href="#" class="menu-button" id="menu-button" title="Toggle"><span></span></a>
+		<ul class="menu-option" id="menu-option">
+			<li><a href="#" title="item1" class="icon1" id="icon1" style="background:"><span></span></a></li>
+			<li><a href="#" title="item2" class="icon2" id="icon2" style="background:"><span></span></a></li>
+			<li><a href="#" title="item3" class="icon3" id="icon3" style="background:"><span></span></a></li>
+			<li><a href="#" title="item4" class="icon4" id="icon4" style="background:"><span></span></a></li>
+			<li><a href="#" title="item5" class="icon5" id="icon5" style="background:"><span></span></a></li>
+			<li><a href="#" title="item6" class="icon6" id="icon6" style="background:"><span></span></a></li>
+			<li><a href="#" title="item7" class="icon7" id="icon7" style="background:"><span></span></a></li>
+			<li><a href="#" title="item8" class="icon8" id="icon8" style="background:"><span></span></a></li>
+		</ul>
+	</div>
+
+	<!-- メニューのパラメータ設定 -->
+	<input type="hidden" id="startAngle"      class="value deg" value="35" />
+	<input type="hidden" id="angleDifference" class="value deg" value="90" />
+	<input type="hidden" id="radius"          class="value deg" value="750" />
+	<input type="hidden" id="delay"           class="value deg" value="30" />
+	<input type="hidden" id="zahyoux"         class="value deg" value="0" />
+	<input type="hidden" id="zahyouy"         class="value deg" value="400" />
+
+<!-- *********************************************************************************************** -->
+
+<header>
+		<nav>	
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</a>
+						<a class="brand" href="./top.html">HTML5
+                                                <div id="webSocketCount"></div>
+                                                </a>
+						<div class="nav-collapse">
+							<ul class="nav">
+								<li><a href="./chat4.html">メッセージング</a></li>
+								<li><a href="./whiteBord.html">ホワイトボード</a></li>
+								<li><a href="./game.html">ゲーム</a></li>
+								<li><a href="./map.html">MAP</a></li>
+								<li><a href="./videochat.html">ライブ配信</a></li>
+                                                                <li><a href="./gallary.html">ギャラリー</a></li>
+                                                                <li><a href="./360camera.html">360度カメラ</a></li>
+                                                                <li><a href="./sengraph.html">データ可視化</a></li>
+                                                                <li><a href="./3dAnimation.html">3D</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+    </header>
+
+<h6>ドラッグ＆ドロップで複数のファイルの内容を表示します</h6>
+<div id="drop" style="display:inline-block;width:150px; height:150px; padding:10px; border:1px solid"ondragover="onDragOver(event)">
+<IMG  SRC="./images/dragdrop.png">
+</div>
+<IMG id="bigImg" src="" style="width:180px; height:180px; padding:5px; border:1px solid">
+<br>
+<div id="disp" ></div>
+<input type="text" id="textbox" style="visibility:hidden">
+<script src="./js/bootstrap.js"></script>
+<script src="./js/chat_client.js"></script>
+
+<script type="text/javascript">
+  // File API実装チェック
+  if (window.File) {
+    //window.alert("File APIが実装されてます。");
+    // File APIが実装されている場合には、dropイベントを登録
+    document.getElementById("drop").addEventListener("drop", onDrop, false);
+  } else {
+    window.alert("本ブラウザではFile APIが使えません");
+  }
+
+
+  // Drop領域にドロップした際のファイルのプロパティ情報読み取り処理
+  function onDrop(event) {
+    var files = event.dataTransfer.files;
+    var disp = document.getElementById("disp");
+    disp.innerHTML ="";
+var num = 0;
+    // ファイルの配列から1つずつファイルを選択
+    for (var i=0; i< files.length; i++) {
+      var f = files[i];
+      // FileReaderオブジェクトの生成
+      var reader = new FileReader();
+
+      //画像ファイルかテキスト・ファイルかを判定
+      if (!f.type.match('image.*') && !f.type.match('text.*')) {
+        alert("画像ファイルとテキスト・ファイル以外は表示できません。");
+        continue;
+      }
+
+      //エラー発生時の処理
+      reader.onerror = function (evt) {
+        disp.innerHTML = "読み取り時にエラーが発生しました。";
+      }
+
+      //画像ファイルの場合の処理
+      if (f.type.match('image.*')) {
+      
+        //イメージファイルの読取が完了した際
+        reader.onload = function (evt) {
+
+          //画像表示処理
+          var a = document.createElement('a');
+          var img = document.createElement('img');
+          img.src = evt.target.result;
+          img.width = 100;
+          img.height = 100;
+          a.appendChild(img);
+num++;
+document.getElementById("icon"+num).style.backgroundImage = "url(" + img.src + ")";//アイコン背景に画像を割り当てる
+//document.getElementById("icon"+num).href = img.src;//画像パスをhrefに割り当てる
+
+	  //アルバム画面へのクリック表示処理を追加
+	  var bigImg = document.getElementById('bigImg'); 
+          a.onclick = function(){
+	  	bigImg.src = img.src;
+                //WebScoket経由の画像送信 
+                ws.send(JSON.stringify({
+		   type: 'gallary',
+	           user: userName,
+		   image: bigImg.src
+		}));
+          }; 
+          disp.appendChild(a);
+
+        }
+        // readAsDataURLメソッドでファイルの内容を取得
+        reader.readAsDataURL(f);
+      }
+
+      //テキスト・ファイルの場合の処理
+      if (f.type.match('text.*')) {
+        // ファイル読取が完了した際に呼ばれる処理
+        reader.onload = function (evt) {
+          // FileReaderが取得したテキストをそのままdivタグに出力
+          disp.innerHTML = reader.result;
+        }
+        // readAsTextメソッドでファイルの内容を取得
+        reader.readAsText(f, 'shift-jis');
+      }
+    }
+  //ブラウザ上でファイルを展開する挙動を抑止
+  event.preventDefault();
+  }
+
+  function onDragOver(event) {
+    //ブラウザ上でファイルを展開する挙動を抑止
+    event.preventDefault();
+  }
+</script>
+
+
+
+</body>
+
+</html>
